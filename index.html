@@ -8,13 +8,14 @@
 </head>
 
 <body>
-
-  <div id= "shopping-list">
+    <div id="shopping-list">
     <!-- <h1>{{header ? header : 'welcome'}}</h1> -->
     <!-- You can add ternary operator in the double moustache -->
     <div class="header">
-      <h2>{{header.toLocaleUpperCase() ? header : 'Welcome'}}</h2>
+      <h1>{{header.toLocaleUpperCase() ? header : 'Welcome'}}</h1>
       <input v-model='header' type="text" placeholder="stuff">
+      <br>
+      <br>
       <button v-if="state === 'default'" @click="changeState('edit')">Add item</button>
       <!-- here you can see the changeState to edit and the if statement -->
       <button v-else @click="changeState('default')">Cancel</button>
@@ -45,15 +46,17 @@
       </ul>
       <p v-if="items.length === 0"> Nice Job</p>
       <!-- v-if as a conditional statement to display the list if there is a item -->
-
+    </div>
   </div>
+
+
   <script src="https://unpkg.com/vue"></script>
   <script>
     var shoppingList = new Vue({
       el: '#shopping-list',
       data: {
         state: 'default',
-        header: 'Shopping List App',
+        header: 'Shopping List App and basics of VUE.JS',
         newItem:'',
         items: [
           {
@@ -82,7 +85,7 @@
         },
       },
       // Be careful when using computed or methods. When you need to change data itself use methods
-      // whend you need to change the presentation of the data, use computed
+      // when you need to change the presentation of the data, use computed
       methods: {
         saveItem: function() {
           // need the explicit ref
