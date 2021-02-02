@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>shopping list</title>
+  <link rel="stylesheet" href="./main.css">
+</head>
+
+<body>
+
+  <div id= "shopping-list">
+    <!-- <h1>{{header ? header : 'welcome'}}</h1> -->
+    <!-- You can add ternary operator in the double moustache -->
+    <div class="header">
+      <h2>{{header.toLocaleUpperCase() ? header : 'Welcome'}}</h2>
+      <input v-model='header' type="text" placeholder="stuff">
+      <button v-if="state === 'default'" @click="changeState('edit')">Add item</button>
+      <!-- here you can see the changeState to edit and the if statement -->
+      <button v-else @click="changeState('default')">Cancel</button>
+      <!-- those two button show the magic of v-if and v-else to display element accordingly to their state -->
+      <!-- we can create a function to play with states -->
+    </div>
+    <!-- <input type="text" v-model="header"> -->
+    <!-- the v-model allow link to the form between the data header and the proper header-->
+
+    <div  v-if="state === 'edit'" class="add-item-form">
+      <!-- v-if offer conditional statement -->
+      <input v-model= 'newItem' type="text" placeholder="Add a new item" @keyup.enter="saveItem">
+      <p> You typed {{ characterCount }}/200</p>
+      <button v-bind:disabled='newItem.length === 0' @click="saveItem">Save item</button>
+      <!-- @ is shortcut for v-on and allow eventListener and function activation,
+      here the method saveItem defined in methods line 42 -->
+      <!-- v-bind:disabled or :disabled ==> allow to disable button if nothing is typed -->
+    </div>
+      <!-- <a v-bind:href="newItem" target="_blank">Dynamic link</a> -->
+      <!-- line above is used to show that you can bind a link to an item with v-bind -->
+      <ul>
+        <li v-for= 'item in reversedItems' :class="[item.purchased ? 'strikeout' : '']" @click='togglePurchase(item)'>{{item.label}}</li>
+        <!-- :class={className: element.function} allow to add a class if function return true this is the object method
+        but you can use array method :class="[item.purchased ? 'strikeout' : '']" and it's more flexible and you can add other ternary oreration after a ","-->
+        <!-- REMEMBER :class to have dynamic class -->
+        <!-- for each item in items in a li -->
+        <!-- reversedItems us to be items but now it's a computed data so it's a copy of items the original array -->
+      </ul>
+      <p v-if="items.length === 0"> Nice Job</p>
+      <!-- v-if as a conditional statement to display the list if there is a item -->
+
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script>
+    var shoppingList = new Vue({
+      el: '#shopping-list',
+      data: {
+        state: 'default',
+        header: 'Shopping List App',
+        newItem:'',
+        items: [
+          {
+            label: '10 party hats',
+            purchased: false,
+          },
+          {
+            label: '2 board games',
+            purchased: true,
+          },
+          {
+            label: '20 cups',
+            purchased: false,
+          },
+        ]
+      },
+      computed: {
+        characterCount() {
+          return this.newItem.length;
+          // Computed properties allows us to transform or perform calculations
+          // on our data and then easily reuse the result as an up-to-date variable in our template.
+        },
+        reversedItems() {
+          return this.items.slice(0).reverse();
+          // be carful not not change the values of the original array, so use a slice method that makes a copy
+        },
+      },
+      // Be careful when using computed or methods. When you need to change data itself use methods
+      // whend you need to change the presentation of the data, use computed
+      methods: {
+        saveItem: function() {
+          // need the explicit ref
+          this.items.push({
+            label: this.newItem,
+            purchased: false,
+          },);
+          // need to reset the input for the client, you're in charge to maintain the state of the interface
+          this.newItem = '';
+          //  don't forget to test in the console before integration
+        },
+        changeState : function(newState) {
+          this.state = newState;
+          // the newState parameter is equal to the current state
+          this.newItem= '';
+        },
+        togglePurchase : function(item) {
+          item.purchased = !item.purchased;
+          // switch from purchased (default state is false) to !purchased so it's true and can activate strikeout on toggle with @click
+        }
+      }
+    });
+  </script>
+</body>
+</html>
